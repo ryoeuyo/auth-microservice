@@ -1,0 +1,20 @@
+environment: "local" # may be "local" or "prod"
+
+grpc_server:
+  port: 44140
+  timeout: 15s # write and read timeouts
+  idle_timeout: 60s
+  token_ttl: 15m
+
+metric_server:
+  port: 33300
+  address: "127.0.0.1"
+
+database:
+  engine: "postgres"
+  host: "127.0.0.1"
+  port: 5432
+  user: "postgres"
+  password: "postgres"
+  name: "postgres"
+  migration_dir: "./sql/migrations"
