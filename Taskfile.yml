@@ -1,0 +1,18 @@
+version: '3'
+
+tasks:
+  run-local:
+    cmds:
+      - go run ./cmd
+    env:
+      CONFIG_PATH: ./config/config-local.yml
+
+  run-prod:
+    cmds:
+      - go run ./cmd
+    env:
+      CONFIG_PATH: ./config/config-prod.yml
+
+  test:
+    cmds:
+      - go test -v ./...

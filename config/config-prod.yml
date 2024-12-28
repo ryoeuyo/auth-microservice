@@ -1,8 +1,8 @@
-environment: "local" # may be "local" or "prod"
+environment: "prod" # may be "local" or "prod"
 
 grpc_server:
   port: 44140
-  timeout: 15s # write and read timeouts
+  timeout: 5s # write and read timeouts
   idle_timeout: 60s
   token_ttl: 15m
 

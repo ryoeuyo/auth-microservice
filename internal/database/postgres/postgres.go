@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/jackc/pgx"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/ryoeuyo/sso/internal/database"
@@ -37,7 +36,7 @@ func (d *Database) Save(ctx context.Context, login string, passHash []byte) (int
 
 	res, err := stmt.ExecContext(ctx, login, passHash)
 	if err != nil {
-		var pgErr pgconn.PgError
+		var pgErr *pgconn.PgError
 
 		if errors.As(err, &pgErr) {
 			switch pgErr.Code {

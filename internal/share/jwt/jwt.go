@@ -1,12 +1,9 @@
 package jwt
 
 import (
-	"fmt"
-	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/joho/godotenv"
 	"github.com/ryoeuyo/sso/internal/domain/entity"
 )
 
