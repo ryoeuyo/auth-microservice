@@ -13,6 +13,7 @@ type AppConfig struct {
 	GRPCServer   GRPCServer   `yaml:"grpc_server"`
 	MetricServer MetricServer `yaml:"metric_server"`
 	Database     Database     `yaml:"database"`
+	JWTSecretKey string       `env:"JWT_SECRET_KEY,required"`
 }
 
 type GRPCServer struct {

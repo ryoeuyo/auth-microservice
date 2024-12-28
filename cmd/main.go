@@ -1,22 +1,29 @@
 package main
 
 import (
-	"github.com/ryoeuyo/sso/internal/app"
-	"github.com/ryoeuyo/sso/internal/config"
-	"github.com/ryoeuyo/sso/internal/share/logger"
 	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/ryoeuyo/sso/internal/app"
+	"github.com/ryoeuyo/sso/internal/config"
+	"github.com/ryoeuyo/sso/internal/database/postgres"
+	"github.com/ryoeuyo/sso/internal/share/logger"
 )
 
 func main() {
 	cfg := config.MustLoad()
 	l := logger.Setup(cfg.Env)
 
-	l.Info("Configuration loaded", slog.Any("env", cfg.Env))
+	l.Info("Configuration loaded", slog.String("env", cfg.Env))
 
-	application := app.New(l, cfg.GRPCServer.Port, nil, cfg.GRPCServer.TokenTTL)
+	repository := postgres.MustInit(cfg.Database)
+	defer repository.Stop()
+
+	l.Debug("Repository configured", slog.Any("port", cfg.Database.Port))
+
+	application := app.New(l, cfg.GRPCServer.Port, repository, cfg.GRPCServer.TokenTTL, cfg.JWTSecretKey)
 	go application.Srv.MustStart()
 
 	stop := make(chan os.Signal, 1)

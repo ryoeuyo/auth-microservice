@@ -12,8 +12,8 @@ type App struct {
 	Srv *grpcapp.App
 }
 
-func New(log *slog.Logger, port uint16, repository entity.UserRepository, tokenTTL time.Duration) *App {
-	authService := auth.New(log, repository, tokenTTL)
+func New(log *slog.Logger, port uint16, repository entity.UserRepository, tokenTTL time.Duration, JWTSecret string) *App {
+	authService := auth.New(log, repository, tokenTTL, JWTSecret)
 	grpcSrv := grpcapp.New(log, authService, port)
 
 	return &App{

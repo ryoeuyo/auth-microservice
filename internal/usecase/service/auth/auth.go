@@ -9,28 +9,27 @@ import (
 
 	"github.com/ryoeuyo/sso/internal/database"
 	"github.com/ryoeuyo/sso/internal/domain/entity"
+	"github.com/ryoeuyo/sso/internal/share/jwt"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type Service struct {
-	l        *slog.Logger
-	Repo     entity.UserRepository
-	TokenTTL time.Duration
+	l         *slog.Logger
+	Repo      entity.UserRepository
+	JWTSecret string
+	TokenTTL  time.Duration
 }
 
-func New(log *slog.Logger, repo entity.UserRepository, ttl time.Duration) *Service {
+func New(log *slog.Logger, repo entity.UserRepository, ttl time.Duration, JWTSecret string) *Service {
 	return &Service{
-		l:        log,
-		Repo:     repo,
-		TokenTTL: ttl,
+		l:         log,
+		Repo:      repo,
+		TokenTTL:  ttl,
+		JWTSecret: JWTSecret,
 	}
 }
 
-func (s *Service) Login(
-	ctx context.Context,
-	login string,
-	pass string,
-) (string, error) {
+func (s *Service) Login(ctx context.Context, login string, pass string) (string, error) {
 	const fn = "auth.Login"
 
 	l := s.l.With(
@@ -54,21 +53,22 @@ func (s *Service) Login(
 	if err := bcrypt.CompareHashAndPassword(user.PassHash, []byte(pass)); err != nil {
 		l.Warn("invalid credentials", slog.String("error", err.Error()))
 
-		return "", fmt.Errorf("%s: %v", fn, ErrInvalidCredentials)
+		return "", fmt.Errorf("%s: %w", fn, ErrInvalidCredentials)
 	}
 
 	l.Info("user successfully logged")
 
-	// TODO: token
+	token, err := jwt.NewToken(user, s.TokenTTL, s.JWTSecret)
+	if err != nil {
+		l.Error("failed to generate jwt token", slog.String("error", err.Error()))
 
-	return "", nil
+		return "", fmt.Errorf("%s: %w", fn, err)
+	}
+
+	return token, nil
 }
 
-func (s *Service) Register(
-	ctx context.Context,
-	login string,
-	pass string,
-) (int64, error) {
+func (s *Service) Register(ctx context.Context, login string, pass string) (int64, error) {
 	const fn = "auth.Register"
 
 	l := s.l.With(
