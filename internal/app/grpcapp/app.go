@@ -1,8 +1,11 @@
-package grpc
+package grpcapp
 
 import (
 	"context"
 	"fmt"
+	"log/slog"
+	"net"
+
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/logging"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
 	"github.com/ryoeuyo/sso/internal/domain/entity"
@@ -10,8 +13,6 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"log/slog"
-	"net"
 )
 
 type App struct {
@@ -59,7 +60,7 @@ func (a *App) MustStart() {
 		panic(err)
 	}
 
-	a.log.Info("grpc server listening on address", slog.String("address", l.Addr().String()))
+	a.log.Info("grpcapp server listening on address", slog.String("address", l.Addr().String()))
 
 	if err := a.Server.Serve(l); err != nil {
 		panic(err)
@@ -67,10 +68,10 @@ func (a *App) MustStart() {
 }
 
 func (a *App) Stop() {
-	const fn = "grpc.Stop"
+	const fn = "grpcapp.Stop"
 
 	a.log.With(slog.String("fn", fn)).
-		Info("stopping grpc server", slog.Any("port", a.port))
+		Info("stopping grpcapp server", slog.Any("port", a.port))
 
 	a.Server.GracefulStop()
 }

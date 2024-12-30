@@ -10,7 +10,7 @@ import (
 	"github.com/ryoeuyo/sso/internal/config"
 )
 
-func MustInit(cfg config.Database) *Database {
+func MustInit(cfg *config.Database) *Database {
 	connString := fmt.Sprintf(
 		"host=%s port=%d dbname=%s user=%s password=%s",
 		cfg.Host, cfg.Port, cfg.Name, cfg.User, cfg.Password,

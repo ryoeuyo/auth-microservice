@@ -37,7 +37,6 @@ func (d *Database) Save(ctx context.Context, login string, passHash []byte) (int
 	res, err := stmt.ExecContext(ctx, login, passHash)
 	if err != nil {
 		var pgErr *pgconn.PgError
-
 		if errors.As(err, &pgErr) {
 			switch pgErr.Code {
 			case "23505": // unique violation

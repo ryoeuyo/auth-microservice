@@ -5,11 +5,13 @@ import (
 	"os"
 
 	"github.com/golang-cz/devslog"
+	"github.com/ryoeuyo/sso/internal/share/logger/slogdiscard"
 )
 
 const (
 	envLocal = "local"
 	envProd  = "prod"
+	envTest  = "test"
 )
 
 func Setup(env string) *slog.Logger {
@@ -31,6 +33,8 @@ func Setup(env string) *slog.Logger {
 		log = slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
 			Level: slog.LevelInfo,
 		}))
+	case envTest:
+		log = slog.New(slogdiscard.NewDiscardHandler())
 	}
 
 	return log

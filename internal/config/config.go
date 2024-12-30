@@ -17,6 +17,7 @@ type AppConfig struct {
 }
 
 type GRPCServer struct {
+	Address     string        `yaml:"address"`
 	Port        uint16        `yaml:"port"`
 	Timeout     time.Duration `yaml:"timeout"`
 	IdleTimeout time.Duration `yaml:"idle_timeout"`
@@ -38,12 +39,21 @@ type Database struct {
 	MigrationDir string `yaml:"migration_dir"`
 }
 
-func MustLoad() *AppConfig {
+func MustLoad(path ...string) *AppConfig {
 	godotenv.Load()
 
-	configPath := os.Getenv("CONFIG_PATH")
-	if configPath == "" {
-		panic("CONFIG_PATH is not set")
+	var configPath string
+
+	if path != nil && len(path) > 0 {
+		configPath = path[0]
+		if configPath == "" {
+			panic("config file path is empty")
+		}
+	} else {
+		configPath = os.Getenv("CONFIG_PATH")
+		if configPath == "" {
+			panic("CONFIG_PATH is not set")
+		}
 	}
 
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
@@ -54,6 +64,10 @@ func MustLoad() *AppConfig {
 
 	if err := cleanenv.ReadConfig(configPath, &cfg); err != nil {
 		panic("failed to read config")
+	}
+
+	if err := cleanenv.ReadEnv(&cfg); err != nil {
+		panic("failed to read env")
 	}
 
 	return &cfg
