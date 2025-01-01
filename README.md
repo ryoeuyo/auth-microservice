@@ -24,12 +24,11 @@ Configuration is done with files in ./config directory
     cd auth-microservice
    ```
 3. Optionally, modify the `config/config-*.yml` files as needed.
-4. If need, change `config/config-*.yml`
-5. Build container:
+4. Build container:
    ```bash 
    docker compose build
    ```
-6. Start the service:
+5. Start the service:
    ```bash 
     docker-compose up -d
    ```
