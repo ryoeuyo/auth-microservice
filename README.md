@@ -17,20 +17,20 @@ Configuration is done with files in ./config directory
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/ryoeuyo/auth-microservice.git
+   $ git clone https://github.com/ryoeuyo/auth-microservice.git
    ```
 2. Navigate to the project directory:
    ```bash
-    cd auth-microservice
+   $ cd auth-microservice
    ```
 3. Optionally, modify the `config/config-*.yml` files as needed.
 4. Build container:
    ```bash 
-   docker compose build
+   # docker compose build
    ```
 5. Start the service:
    ```bash 
-    docker-compose up -d
+   # docker-compose up -d
    ```
 
 ## etc
