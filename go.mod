@@ -28,6 +28,7 @@ require (
 	github.com/rogpeppe/go-internal v1.13.1 // indirect
 	github.com/ryoeuyo/slogdiscard v0.0.0-20241230214012-dc916ac7c4c8 // indirect
 	github.com/sethvargo/go-retry v0.3.0 // indirect
+	github.com/stretchr/objx v0.5.2 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/net v0.33.0 // indirect
 	golang.org/x/sync v0.10.0 // indirect
