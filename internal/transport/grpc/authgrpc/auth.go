@@ -3,9 +3,9 @@ package authgrpc
 import (
 	"context"
 	"errors"
+	"github.com/ryoeuyo/auth-microservice/internal/domain/entity"
+	"github.com/ryoeuyo/auth-microservice/internal/service/auth"
 	ssov1 "github.com/ryoeuyo/mi-blog-protos/gen/go/sso"
-	"github.com/ryoeuyo/sso/internal/domain/entity"
-	"github.com/ryoeuyo/sso/internal/usecase/service/auth"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -15,10 +15,10 @@ import (
 type Server struct {
 	ssov1.UnimplementedAuthServer
 	l   *slog.Logger
-	svc entity.AuthUseCase
+	svc entity.AuthService
 }
 
-func Register(gRPCServer *grpc.Server, authUseCase entity.AuthUseCase, log *slog.Logger) {
+func Register(gRPCServer *grpc.Server, authUseCase entity.AuthService, log *slog.Logger) {
 	ssov1.RegisterAuthServer(gRPCServer, &Server{l: log, svc: authUseCase})
 }
 

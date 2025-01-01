@@ -8,8 +8,8 @@ import (
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/logging"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
-	"github.com/ryoeuyo/sso/internal/domain/entity"
-	"github.com/ryoeuyo/sso/internal/transport/grpc/authgrpc"
+	"github.com/ryoeuyo/auth-microservice/internal/domain/entity"
+	"github.com/ryoeuyo/auth-microservice/internal/transport/grpc/authgrpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -21,7 +21,7 @@ type App struct {
 	port   uint16
 }
 
-func New(log *slog.Logger, useCase entity.AuthUseCase, port uint16) *App {
+func New(log *slog.Logger, svc entity.AuthService, port uint16) *App {
 	logOpts := []logging.Option{
 		logging.WithLogOnEvents(logging.PayloadReceived, logging.PayloadSent),
 	}
@@ -39,7 +39,7 @@ func New(log *slog.Logger, useCase entity.AuthUseCase, port uint16) *App {
 		logging.UnaryServerInterceptor(InterceptorLogger(log), logOpts...),
 	))
 
-	authgrpc.Register(server, useCase, log)
+	authgrpc.Register(server, svc, log)
 
 	return &App{
 		log:    log,

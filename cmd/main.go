@@ -1,14 +1,15 @@
 package main
 
 import (
+	"github.com/ryoeuyo/auth-microservice/internal/database/postgres"
 	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
 
-	"github.com/ryoeuyo/sso/internal/app"
-	"github.com/ryoeuyo/sso/internal/config"
-	"github.com/ryoeuyo/sso/internal/share/logger"
+	"github.com/ryoeuyo/auth-microservice/internal/app"
+	"github.com/ryoeuyo/auth-microservice/internal/config"
+	"github.com/ryoeuyo/auth-microservice/internal/share/logger"
 )
 
 func main() {
@@ -17,7 +18,10 @@ func main() {
 
 	l.Info("Config loaded", slog.String("env", cfg.Env))
 
-	application := app.New(l, cfg)
+	repository := postgres.MustInit(&cfg.Database)
+	defer repository.Stop()
+
+	application := app.New(l, repository, cfg)
 	go application.Srv.MustStart()
 
 	stop := make(chan os.Signal, 1)

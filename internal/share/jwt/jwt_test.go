@@ -2,7 +2,7 @@ package jwt
 
 import (
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/ryoeuyo/sso/internal/domain/entity"
+	"github.com/ryoeuyo/auth-microservice/internal/domain/entity"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -63,7 +63,6 @@ func TestNewToken_Expired(t *testing.T) {
 	})
 	require.Error(t, err)
 	assert.Equal(t, tokenParsed.Valid, false)
-
 }
 
 func TestNewToken_InvalidSecret(t *testing.T) {

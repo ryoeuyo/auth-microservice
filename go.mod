@@ -1,4 +1,4 @@
-module github.com/ryoeuyo/sso
+module github.com/ryoeuyo/auth-microservice
 
 go 1.23.4
 

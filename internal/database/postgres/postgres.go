@@ -8,8 +8,8 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
-	"github.com/ryoeuyo/sso/internal/database"
-	"github.com/ryoeuyo/sso/internal/domain/entity"
+	"github.com/ryoeuyo/auth-microservice/internal/database"
+	"github.com/ryoeuyo/auth-microservice/internal/domain/entity"
 )
 
 type Database struct {
@@ -29,12 +29,16 @@ func (d *Database) Stop() error {
 func (d *Database) Save(ctx context.Context, login string, passHash []byte) (int64, error) {
 	const fn = "postgres.Save"
 
-	stmt, err := d.db.Prepare("INSERT INTO users(login, passHash) VALUES (?, ?) RETURNS id")
+	stmt, err := d.db.Prepare("INSERT INTO users(login, passHash) VALUES ($1, $2) RETURNING id")
 	if err != nil {
 		return 0, fmt.Errorf("%s: %w", fn, err)
 	}
 
-	res, err := stmt.ExecContext(ctx, login, passHash)
+	row := stmt.QueryRowContext(ctx, login, passHash)
+
+	var id int64
+
+	err = row.Scan(&id)
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) {
@@ -50,18 +54,13 @@ func (d *Database) Save(ctx context.Context, login string, passHash []byte) (int
 		return 0, fmt.Errorf("%s: %w", fn, err)
 	}
 
-	id, err := res.LastInsertId()
-	if err != nil {
-		return 0, fmt.Errorf("%s: %w", fn, err)
-	}
-
 	return id, nil
 }
 
 func (d *Database) User(ctx context.Context, login string) (*entity.User, error) {
 	const fn = "postgres.User"
 
-	stmt, err := d.db.Prepare("SELECT id, login, passHash FROM users WHERE login = ?")
+	stmt, err := d.db.Prepare("SELECT id, login, passHash FROM users WHERE login = $1")
 	if err != nil {
 		return &entity.User{}, fmt.Errorf("%s: %w", fn, err)
 	}

@@ -7,7 +7,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	sql "github.com/jackc/pgx/v5/stdlib"
 	"github.com/pressly/goose/v3"
-	"github.com/ryoeuyo/sso/internal/config"
+	"github.com/ryoeuyo/auth-microservice/internal/config"
 )
 
 func MustInit(cfg *config.Database) *Database {

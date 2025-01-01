@@ -2,27 +2,58 @@ version: '3'
 
 dotenv: ['.env']
 
+vars:
+  LOCAL_POSTGRES_DOCKER_NAME: localpostgres
+  TEST_POSTGRES_DOCKER_NAME: testpostgres
+
 tasks:
-  up-deps:
+  # Tasks for local environment
+  unit-test:
     cmds:
-      - sudo docker run --name {{.POSTGRES_DOCKER_NAME}} -e POSTGRES_PASSWORD={{.POSTGRES_PASSWORD}} -p 5432:5432 -d postgres
+      - go test -v ./internal/...
+
+  up-deps:
+    desc: "Up dependencies."
+    cmds:
+      - docker run --name {{.LOCAL_POSTGRES_DOCKER_NAME}} -e POSTGRES_PASSWORD={{.POSTGRES_PASSWORD}} -p 5432:5432 -d postgres
+
+  down-deps:
+    desc: "Down dependencies"
+    cmds:
+      - |
+        if docker ps -a --filter "name={{.LOCAL_POSTGRES_DOCKER_NAME}}" --format "{{.Names}}" | grep -w "{{.LOCAL_POSTGRES_DOCKER_NAME}}" > /dev/null; then
+          docker stop {{.LOCAL_POSTGRES_DOCKER_NAME}}
+          docker rm {{.LOCAL_POSTGRES_DOCKER_NAME}}
+        else
+          echo "Container {{.LOCAL_POSTGRES_DOCKER_NAME}} does not exist."
+        fi
+
+  restart-deps:
+    desc: "Starts down-deps and up-deps"
+    cmds:
+      - go-task down-deps
+      - go-task up-deps
 
   run-local:
+    desc: "Starts locally. Beforehand need raise deps"
     cmds:
       - go run ./cmd
-      - defer: docker stop {{.POSTGRES_DOCKER_NAME}}
-      - defer: docker rm {{.POSTGRES_DOCKER_NAME}}
     env:
       CONFIG_PATH: ./config/config-local.yml
 
   test-local:
+    desc: "Starts locally. All deps are raised automatically. After tests all deps are downs automatically"
     cmds:
-      - sudo docker run --name {{.TEST_POSTGRES_DOCKER_NAME}} -e POSTGRES_PASSWORD={{.TEST_POSTGRES_PASSWORD}} -p 9069:5432 -d postgres
+      - docker run --name {{.TEST_POSTGRES_DOCKER_NAME}} -e POSTGRES_PASSWORD={{.TEST_POSTGRES_PASSWORD}} -p 9069:5432 -d postgres
       - go run ./cmd
       - go test -v ./tests/...
+      - defer: docker stop {{.TEST_POSTGRES_DOCKER_NAME}}
+      - defer: docker rm {{.TEST_POSTGRES_DOCKER_NAME}}
     env:
+      TEST_POSTGRES_DOCKER_NAME: testpostgres
       CONFIG_PATH: ./config/config-local.yml
 
+  # TODO: make commands for prod environment
   run-prod:
     cmds:
       - go run ./cmd

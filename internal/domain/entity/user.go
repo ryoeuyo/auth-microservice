@@ -10,7 +10,7 @@ type User struct {
 	PassHash []byte
 }
 
-type AuthUseCase interface {
+type AuthService interface {
 	Login(ctx context.Context, login string, pass string) (string, error)
 	Register(ctx context.Context, login string, pass string) (int64, error)
 }

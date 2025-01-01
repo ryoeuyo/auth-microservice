@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/ryoeuyo/sso/internal/domain/entity"
+	"github.com/ryoeuyo/auth-microservice/internal/domain/entity"
 )
 
 func NewToken(user *entity.User, duration time.Duration, secret string) (string, error) {

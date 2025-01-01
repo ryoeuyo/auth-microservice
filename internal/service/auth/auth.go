@@ -7,9 +7,9 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/ryoeuyo/sso/internal/database"
-	"github.com/ryoeuyo/sso/internal/domain/entity"
-	"github.com/ryoeuyo/sso/internal/share/jwt"
+	"github.com/ryoeuyo/auth-microservice/internal/database"
+	"github.com/ryoeuyo/auth-microservice/internal/domain/entity"
+	"github.com/ryoeuyo/auth-microservice/internal/share/jwt"
 	"golang.org/x/crypto/bcrypt"
 )
 
