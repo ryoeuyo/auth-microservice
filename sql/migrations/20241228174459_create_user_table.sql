@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS users (
   passHash BYTEA NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_login ON users (login);
--- +goose StatementBegin11
+-- +goose StatementBegin
 SELECT 'up SQL query';
 -- +goose StatementEnd
 

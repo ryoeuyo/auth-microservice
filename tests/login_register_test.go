@@ -40,7 +40,6 @@ func TestRegister_Login_HappyPath(t *testing.T) {
 	require.True(t, ok)
 
 	assert.Equal(t, login, claims["login"].(string))
-	assert.Equal(t, password, claims["password"].(string))
 	assert.Equal(t, respReg.GetUserId(), claims["id"])
 }
 
@@ -79,7 +78,7 @@ func TestRegister_FailCases(t *testing.T) {
 				Login:    tt.login,
 				Password: tt.password,
 			})
-			require.NoError(t, err)
+			require.Error(t, err)
 		})
 	}
 }

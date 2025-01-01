@@ -45,7 +45,7 @@ func (s *Service) Login(ctx context.Context, login string, pass string) (string,
 			return "", fmt.Errorf("%s: %v", fn, ErrInvalidCredentials)
 		}
 
-		l.Error("couldn't find user", slog.String("error", err.Error()))
+		l.Warn("couldn't find user", slog.String("error", err.Error()))
 
 		return "", fmt.Errorf("%s: %w", fn, err)
 	}

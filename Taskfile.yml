@@ -1,9 +1,25 @@
 version: '3'
 
+dotenv: ['.env']
+
 tasks:
+  up-deps:
+    cmds:
+      - sudo docker run --name {{.POSTGRES_DOCKER_NAME}} -e POSTGRES_PASSWORD={{.POSTGRES_PASSWORD}} -p 5432:5432 -d postgres
+
   run-local:
     cmds:
       - go run ./cmd
+      - defer: docker stop {{.POSTGRES_DOCKER_NAME}}
+      - defer: docker rm {{.POSTGRES_DOCKER_NAME}}
+    env:
+      CONFIG_PATH: ./config/config-local.yml
+
+  test-local:
+    cmds:
+      - sudo docker run --name {{.TEST_POSTGRES_DOCKER_NAME}} -e POSTGRES_PASSWORD={{.TEST_POSTGRES_PASSWORD}} -p 9069:5432 -d postgres
+      - go run ./cmd
+      - go test -v ./tests/...
     env:
       CONFIG_PATH: ./config/config-local.yml
 
@@ -12,7 +28,3 @@ tasks:
       - go run ./cmd
     env:
       CONFIG_PATH: ./config/config-prod.yml
-
-  test:
-    cmds:
-      - go test -v ./...

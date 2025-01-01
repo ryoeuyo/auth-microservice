@@ -39,7 +39,7 @@ func New(log *slog.Logger, useCase entity.AuthUseCase, port uint16) *App {
 		logging.UnaryServerInterceptor(InterceptorLogger(log), logOpts...),
 	))
 
-	authgrpc.Register(server, useCase)
+	authgrpc.Register(server, useCase, log)
 
 	return &App{
 		log:    log,

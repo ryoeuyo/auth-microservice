@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/golang-cz/devslog"
-	"github.com/ryoeuyo/sso/internal/share/logger/slogdiscard"
+	"github.com/ryoeuyo/slogdiscard"
 )
 
 const (

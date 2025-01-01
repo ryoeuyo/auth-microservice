@@ -2,8 +2,9 @@ package suite
 
 import (
 	"context"
-	"fmt"
 	"google.golang.org/grpc/credentials/insecure"
+	"net"
+	"strconv"
 	"testing"
 
 	ssov1 "github.com/ryoeuyo/mi-blog-protos/gen/go/sso"
@@ -50,5 +51,5 @@ func New(t *testing.T) (context.Context, *Suite) {
 }
 
 func getTarget(cfg *config.GRPCServer) string {
-	return fmt.Sprintf("%s:%d", cfg.Address, cfg.Port)
+	return net.JoinHostPort(cfg.Address, strconv.Itoa(int(cfg.Port)))
 }

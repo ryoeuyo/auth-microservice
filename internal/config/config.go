@@ -44,15 +44,11 @@ func MustLoad(path ...string) *AppConfig {
 
 	var configPath string
 
-	if path != nil && len(path) > 0 {
+	if path != nil && len(path) > 0 && path[0] != "" {
 		configPath = path[0]
-		if configPath == "" {
-			panic("config file path is empty")
-		}
 	} else {
-		configPath = os.Getenv("CONFIG_PATH")
-		if configPath == "" {
-			panic("CONFIG_PATH is not set")
+		if configPath = os.Getenv("CONFIG_PATH"); configPath == "" {
+			panic("CONFIG_PATH environment variable not set")
 		}
 	}
 

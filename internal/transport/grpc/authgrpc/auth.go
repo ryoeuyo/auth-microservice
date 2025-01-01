@@ -18,8 +18,8 @@ type Server struct {
 	svc entity.AuthUseCase
 }
 
-func Register(gRPCServer *grpc.Server, authUseCase entity.AuthUseCase) {
-	ssov1.RegisterAuthServer(gRPCServer, &Server{svc: authUseCase})
+func Register(gRPCServer *grpc.Server, authUseCase entity.AuthUseCase, log *slog.Logger) {
+	ssov1.RegisterAuthServer(gRPCServer, &Server{l: log, svc: authUseCase})
 }
 
 func (s *Server) Login(
@@ -73,16 +73,16 @@ func (s *Server) Register(
 		slog.String("login", req.GetLogin()),
 	)
 
-	if req.GetLogin() == "" {
-		l.Warn("missing login")
+	if len(req.GetLogin()) < 8 {
+		l.Warn("invalid login")
 
-		return nil, status.Error(codes.InvalidArgument, "login is required")
+		return nil, status.Error(codes.InvalidArgument, "len login could be more than 8 symbols")
 	}
 
-	if req.GetPassword() == "" {
-		l.Warn("missing password")
+	if len(req.GetPassword()) < 8 {
+		l.Warn("weak password")
 
-		return nil, status.Error(codes.InvalidArgument, "password is required")
+		return nil, status.Error(codes.InvalidArgument, "len password could be more than 8 symbols")
 	}
 
 	id, err := s.svc.Register(ctx, req.GetLogin(), req.GetPassword())

@@ -36,5 +36,9 @@ func MustInit(cfg *config.Database) *Database {
 		log.Fatal(err)
 	}
 
+	if err := db.Ping(); err != nil {
+		log.Fatalf("failed to ping database after migrations: %s", err.Error())
+	}
+
 	return New(db)
 }
