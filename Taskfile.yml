@@ -8,10 +8,6 @@ vars:
 
 tasks:
   # Tasks for local environment
-  unit-test:
-    cmds:
-      - go test -v ./internal/...
-
   up-deps:
     desc: "Up dependencies."
     cmds:
@@ -41,16 +37,48 @@ tasks:
     env:
       CONFIG_PATH: ./config/config-local.yml
 
-  test-local:
-    desc: "Starts locally. All deps are raised automatically. After tests all deps are downs automatically"
+  # Tasks for tests
+  unit-test:
+    desc: "Starts unit tests"
     cmds:
-      - docker run --name {{.TEST_POSTGRES_DOCKER_NAME}} -e POSTGRES_PASSWORD={{.TEST_POSTGRES_PASSWORD}} -p 9069:5432 -d postgres
+      - go test -v ./internal/...
+
+  test-up-deps:
+    desc: "Up dependencies for tests."
+    cmds:
+      - docker run --name {{.TEST_POSTGRES_DOCKER_NAME}} -e POSTGRES_PASSWORD={{.POSTGRES_PASSWORD}} -p 9069:5432 -d postgres
+
+  test-down-deps:
+    desc: "Down dependencies for tests."
+    cmds:
+      - |
+        if docker ps -a --filter "name={{.TEST_POSTGRES_DOCKER_NAME}}" --format "{{.Names}}" | grep -w "{{.TEST_POSTGRES_DOCKER_NAME}}" > /dev/null; then
+          docker stop {{.TEST_POSTGRES_DOCKER_NAME}}
+          docker rm {{.TEST_POSTGRES_DOCKER_NAME}}
+        else
+          echo "Container {{.TEST_POSTGRES_DOCKER_NAME}} does not exist."
+        fi
+
+  test-restart-deps:
+    desc: "Starts down-deps and up-deps"
+    cmds:
+      - go-task test-down-deps
+      - go-task test-up-deps
+
+  test-run:
+    desc: "Starts app for tests"
+    cmds:
       - go run ./cmd
-      - go test -v ./tests/...
-      - defer go-task down-deps
+    env:
+      CONFIG_PATH: ./config/config-tests.yml
+
+  test:
+    desc: "Need raise deps for tests and also run the app by following task: test-run. After tests all deps are need down"
+    cmds:
+      - go test -v ./tests/
     env:
       TEST_POSTGRES_DOCKER_NAME: testpostgres
-      CONFIG_PATH: ./config/config-local.yml
+      CONFIG_PATH: ./config/config-tests.yml
 
   # TODO: make commands for prod environment
   run-prod:

@@ -6,14 +6,35 @@ import (
 	ssov1 "github.com/ryoeuyo/mi-blog-protos/gen/go/sso"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"math/rand"
 	"testing"
+	"time"
 )
+
+func randomLoginAndPassword(length int) (string, string) {
+	const (
+		charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	)
+
+	rand.New(rand.NewSource(time.Now().UnixNano()))
+
+	login := make([]byte, length)
+	for i := range login {
+		login[i] = charset[rand.Intn(len(charset))]
+	}
+
+	password := make([]byte, length)
+	for i := range password {
+		password[i] = charset[rand.Intn(len(charset))]
+	}
+
+	return string(login), string(password)
+}
 
 func TestRegister_Login_HappyPath(t *testing.T) {
 	ctx, s := suite.New(t)
 
-	login := "test_login"
-	password := "test_password"
+	login, password := randomLoginAndPassword(10)
 
 	respReg, err := s.AuthClient.Register(ctx, &ssov1.RegisterRequest{
 		Login:    login,
@@ -40,7 +61,7 @@ func TestRegister_Login_HappyPath(t *testing.T) {
 	require.True(t, ok)
 
 	assert.Equal(t, login, claims["login"].(string))
-	assert.Equal(t, respReg.GetUserId(), claims["id"])
+	assert.Equal(t, respReg.GetUserId(), int64(claims["id"].(float64)))
 }
 
 func TestRegister_FailCases(t *testing.T) {
@@ -79,6 +100,27 @@ func TestRegister_FailCases(t *testing.T) {
 				Password: tt.password,
 			})
 			require.Error(t, err)
+			assert.Contains(t, err.Error(), tt.expectedErr)
 		})
 	}
+}
+
+func TestRegister_WithAlreadyExistsLogin(t *testing.T) {
+	ctx, s := suite.New(t)
+	login, password := randomLoginAndPassword(10)
+
+	respReg, err := s.AuthClient.Register(ctx, &ssov1.RegisterRequest{
+		Login:    login,
+		Password: password,
+	})
+	require.NoError(t, err)
+	assert.NotEmpty(t, respReg.GetUserId())
+
+	respReg, err = s.AuthClient.Register(ctx, &ssov1.RegisterRequest{
+		Login:    login,
+		Password: password,
+	})
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "login already exists")
+
 }

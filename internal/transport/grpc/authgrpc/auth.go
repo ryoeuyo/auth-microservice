@@ -90,7 +90,7 @@ func (s *Server) Register(
 		if errors.Is(err, auth.ErrUserIsExists) {
 			l.Warn("invalid credentials", slog.String("error", err.Error()))
 
-			return nil, status.Error(codes.InvalidArgument, "user already exists")
+			return nil, status.Error(codes.InvalidArgument, "login already exists")
 		}
 
 		l.Error("failed register user", slog.String("error", err.Error()))

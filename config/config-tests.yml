@@ -2,13 +2,13 @@ environment: "test" # may be "local", "test" or "prod"
 
 grpc_server:
   address: "127.0.0.1"
-  port: 44140
+  port: 44178
   timeout: 5h # write and read timeouts
   idle_timeout: 60s
   token_ttl: 15m
 
 metric_server:
-  port: 33300
+  port: 33302
   address: "127.0.0.1"
 
 database:

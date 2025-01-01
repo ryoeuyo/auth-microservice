@@ -56,8 +56,6 @@ func (s *Service) Login(ctx context.Context, login string, pass string) (string,
 		return "", fmt.Errorf("%s: %w", fn, ErrInvalidCredentials)
 	}
 
-	l.Info("user successfully logged")
-
 	token, err := jwt.NewToken(user, s.TokenTTL, s.JWTSecret)
 	if err != nil {
 		l.Error("failed to generate jwt token", slog.String("error", err.Error()))
