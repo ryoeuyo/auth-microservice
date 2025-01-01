@@ -1,7 +1,7 @@
 # Auth-Service
 
 ## Description
-A **gRPC-based authentication service** service for managing user authentication and authorization.
+A **gRPC-based authentication service** for managing user authentication.
 
 ### Features
 - **gRPC APIs** for login and registration
