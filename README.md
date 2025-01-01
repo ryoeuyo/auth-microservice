@@ -26,11 +26,11 @@ Configuration is done with files in ./config directory
 3. Optionally, modify the `config/config-*.yml` files as needed.
 4. Build container:
    ```bash 
-   \# docker compose build
+   docker compose build
    ```
 5. Start the service:
    ```bash 
-   \# docker-compose up -d
+   docker-compose up -d
    ```
 
 ## etc
