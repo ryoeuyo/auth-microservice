@@ -42,7 +42,7 @@ func (s *Service) Login(ctx context.Context, login string, pass string) (string,
 		if errors.Is(err, database.ErrUserIsNotExists) {
 			l.Warn("login is not exists", slog.String("error", err.Error()))
 
-			return "", fmt.Errorf("%s: %v", fn, ErrInvalidCredentials)
+			return "", fmt.Errorf("%s: %v", fn, ErrUserNotFound)
 		}
 
 		l.Warn("couldn't find user", slog.String("error", err.Error()))
@@ -85,6 +85,12 @@ func (s *Service) Register(ctx context.Context, login string, pass string) (int6
 
 	id, err := s.Repo.Save(ctx, login, passHash)
 	if err != nil {
+		if errors.Is(err, database.ErrLoginIsExists) {
+			l.Warn("login already exists", slog.String("error", err.Error()))
+
+			return 0, fmt.Errorf("%s: %w", fn, ErrUserIsExists)
+		}
+
 		l.Warn("failed to save user", slog.String("error", err.Error()))
 
 		return 0, fmt.Errorf("%s: %w", fn, err)

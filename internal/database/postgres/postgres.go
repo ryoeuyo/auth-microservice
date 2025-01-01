@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/ryoeuyo/auth-microservice/internal/database"
 	"github.com/ryoeuyo/auth-microservice/internal/domain/entity"
@@ -70,7 +69,7 @@ func (d *Database) User(ctx context.Context, login string) (*entity.User, error)
 	var user entity.User
 	err = row.Scan(&user.ID, &user.Login, &user.PassHash)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
+		if errors.Is(err, sql.ErrNoRows) {
 			return &entity.User{}, fmt.Errorf("%s: %w", fn, database.ErrUserIsNotExists)
 		}
 

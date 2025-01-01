@@ -47,8 +47,7 @@ tasks:
       - docker run --name {{.TEST_POSTGRES_DOCKER_NAME}} -e POSTGRES_PASSWORD={{.TEST_POSTGRES_PASSWORD}} -p 9069:5432 -d postgres
       - go run ./cmd
       - go test -v ./tests/...
-      - defer: docker stop {{.TEST_POSTGRES_DOCKER_NAME}}
-      - defer: docker rm {{.TEST_POSTGRES_DOCKER_NAME}}
+      - defer go-task down-deps
     env:
       TEST_POSTGRES_DOCKER_NAME: testpostgres
       CONFIG_PATH: ./config/config-local.yml

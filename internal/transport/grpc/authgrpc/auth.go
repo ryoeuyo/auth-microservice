@@ -47,7 +47,7 @@ func (s *Server) Login(
 
 	token, err := s.svc.Login(ctx, req.GetLogin(), req.GetPassword())
 	if err != nil {
-		if errors.Is(err, auth.ErrInvalidCredentials) {
+		if errors.Is(err, auth.ErrInvalidCredentials) || errors.Is(err, auth.ErrUserNotFound) {
 			l.Warn("invalid credentials", slog.String("error", err.Error()))
 
 			return nil, status.Error(codes.InvalidArgument, "invalid login or password")
@@ -87,10 +87,10 @@ func (s *Server) Register(
 
 	id, err := s.svc.Register(ctx, req.GetLogin(), req.GetPassword())
 	if err != nil {
-		if errors.Is(err, auth.ErrInvalidCredentials) {
+		if errors.Is(err, auth.ErrUserIsExists) {
 			l.Warn("invalid credentials", slog.String("error", err.Error()))
 
-			return nil, status.Error(codes.InvalidArgument, "invalid login or password")
+			return nil, status.Error(codes.InvalidArgument, "user already exists")
 		}
 
 		l.Error("failed register user", slog.String("error", err.Error()))
