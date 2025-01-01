@@ -23,6 +23,7 @@ func main() {
 
 	application := app.New(l, repository, cfg)
 	go application.Srv.MustStart()
+	go application.MetricServer.MustStart()
 
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, syscall.SIGINT, syscall.SIGTERM)

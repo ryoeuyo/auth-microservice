@@ -2,7 +2,7 @@ environment: "local" # may be "local" or "prod"
 
 grpc_server:
   address: "127.0.0.1"
-  port: 44140
+  port: 44141
   timeout: 5h # write and read timeouts
   idle_timeout: 60s
   token_ttl: 15m

@@ -3,6 +3,7 @@ package auth
 import (
 	"context"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/ryoeuyo/auth-microservice/internal/app/metric"
 	"github.com/ryoeuyo/auth-microservice/internal/domain/entity"
 	"github.com/ryoeuyo/auth-microservice/internal/domain/mocks"
 	"github.com/ryoeuyo/auth-microservice/internal/share/testuitls"
@@ -35,7 +36,7 @@ func TestLogin_HappyPath(t *testing.T) {
 	mockRepo := mocks.NewUserRepository(t)
 	mockRepo.On("User", ctx, login).Return(testUser, nil).Once()
 
-	service := New(slogdiscard.NewDiscardLogger(), mockRepo, tokenTTL, secret)
+	service := New(slogdiscard.NewDiscardLogger(), mockRepo, metric.NewMetric(), tokenTTL, secret)
 
 	token, err := service.Login(ctx, login, password)
 	require.NoError(t, err)
@@ -80,7 +81,7 @@ func TestLogin_ExpiredToken(t *testing.T) {
 	mockRepo := mocks.NewUserRepository(t)
 	mockRepo.On("User", ctx, login).Return(testUser, nil).Once()
 
-	service := New(slogdiscard.NewDiscardLogger(), mockRepo, tokenTTL, secret)
+	service := New(slogdiscard.NewDiscardLogger(), mockRepo, metric.NewMetric(), tokenTTL, secret)
 
 	token, err := service.Login(ctx, login, password)
 	require.NoError(t, err)
@@ -96,7 +97,7 @@ func TestLogin_ExpiredToken(t *testing.T) {
 
 func TestLogin_InvalidPassword(t *testing.T) {
 	const (
-		tokenTTL = 1 * time.Nanosecond
+		tokenTTL = 15 * time.Minute
 		secret   = "secret"
 	)
 
@@ -115,7 +116,7 @@ func TestLogin_InvalidPassword(t *testing.T) {
 	mockRepo := mocks.NewUserRepository(t)
 	mockRepo.On("User", ctx, login).Return(testUser, nil).Once()
 
-	service := New(slogdiscard.NewDiscardLogger(), mockRepo, tokenTTL, secret)
+	service := New(slogdiscard.NewDiscardLogger(), mockRepo, metric.NewMetric(), tokenTTL, secret)
 
 	_, err = service.Login(ctx, login, password)
 	require.Error(t, err)
