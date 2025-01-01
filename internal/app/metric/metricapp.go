@@ -14,7 +14,7 @@ func NewMetric() *Metric {
 			Name: "auth_requests_total",
 			Help: "Total number of authentication requests",
 		},
-		[]string{"method"}, // Для фильтрации по методу (например, login, register)
+		[]string{"method"},
 	)
 
 	authRequestDuration := prometheus.NewHistogramVec(
