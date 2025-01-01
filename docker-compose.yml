@@ -1,0 +1,23 @@
+services:
+  prometheus:
+    image: prom/prometheus:main
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    container_name: prometheus
+
+  postgres:
+    image: postgres:12.22
+    ports:
+      - "5432:5432"
+    container_name: postgres
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+  auth-service:
+    image: ankodd/auth-service:latest
+    ports:
+      - "44141:44141"
+      - "33300:33300"
+    container_name: auth-service
