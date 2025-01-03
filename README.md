@@ -1,7 +1,7 @@
 # Auth-Service
 
 ## Description
-A **gRPC-based authentication service** service for managing user authentication and authorization.
+A **gRPC-based authentication service** for managing user authentication.
 
 ### Features
 - **gRPC APIs** for login and registration
@@ -17,21 +17,20 @@ Configuration is done with files in ./config directory
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/ryoeuyo/auth-microservice.git
+   $ git clone https://github.com/ryoeuyo/auth-microservice.git
    ```
 2. Navigate to the project directory:
    ```bash
-    cd auth-microservice
+   $ cd auth-microservice
    ```
 3. Optionally, modify the `config/config-*.yml` files as needed.
-4. If need, change `config/config-*.yml`
-5. Build container:
+4. Build container:
    ```bash 
    docker compose build
    ```
-6. Start the service:
+5. Start the service:
    ```bash 
-    docker-compose up -d
+   docker-compose up -d
    ```
 
 ## etc
