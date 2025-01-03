@@ -6,7 +6,7 @@ import (
 	"github.com/ryoeuyo/auth-microservice/internal/app/metric"
 	"github.com/ryoeuyo/auth-microservice/internal/domain/entity"
 	"github.com/ryoeuyo/auth-microservice/internal/domain/mocks"
-	"github.com/ryoeuyo/auth-microservice/internal/share/testuitls"
+	"github.com/ryoeuyo/auth-microservice/pkg/testuitls"
 	"github.com/ryoeuyo/slogdiscard"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

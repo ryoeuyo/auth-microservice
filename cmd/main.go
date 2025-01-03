@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/ryoeuyo/auth-microservice/internal/database/postgres"
+	"github.com/ryoeuyo/auth-microservice/pkg/logger"
 	"log/slog"
 	"os"
 	"os/signal"
@@ -9,7 +10,6 @@ import (
 
 	"github.com/ryoeuyo/auth-microservice/internal/app"
 	"github.com/ryoeuyo/auth-microservice/internal/config"
-	"github.com/ryoeuyo/auth-microservice/internal/share/logger"
 )
 
 func main() {

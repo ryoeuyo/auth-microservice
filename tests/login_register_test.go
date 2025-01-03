@@ -2,7 +2,7 @@ package tests
 
 import (
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/ryoeuyo/auth-microservice/internal/share/testuitls"
+	"github.com/ryoeuyo/auth-microservice/pkg/testuitls"
 	"github.com/ryoeuyo/auth-microservice/tests/suite"
 	ssov1 "github.com/ryoeuyo/mi-blog-protos/gen/go/sso"
 	"github.com/stretchr/testify/assert"

@@ -5,12 +5,12 @@ import (
 	"errors"
 	"fmt"
 	"github.com/ryoeuyo/auth-microservice/internal/app/metric"
+	"github.com/ryoeuyo/auth-microservice/pkg/jwt"
 	"log/slog"
 	"time"
 
 	"github.com/ryoeuyo/auth-microservice/internal/database"
 	"github.com/ryoeuyo/auth-microservice/internal/domain/entity"
-	"github.com/ryoeuyo/auth-microservice/internal/share/jwt"
 	"golang.org/x/crypto/bcrypt"
 )
 

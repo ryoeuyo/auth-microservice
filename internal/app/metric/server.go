@@ -24,7 +24,12 @@ func (s *Server) MustStart() {
 	mux := http.NewServeMux()
 	mux.Handle("/metrics", promhttp.Handler())
 
-	if err := http.ListenAndServe(net.JoinHostPort(s.address, strconv.Itoa(int(s.port))), mux); err != nil {
+	addr := net.JoinHostPort(
+		s.address,
+		strconv.Itoa(int(s.port)),
+	)
+
+	if err := http.ListenAndServe(addr, mux); err != nil {
 		panic(err)
 	}
 }
