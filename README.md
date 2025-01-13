@@ -33,7 +33,7 @@ Configuration is done with files in ./config directory
    docker-compose up -d
    ```
 
-## etc
+## Also
 You can also run the service using tasks defined in the `Taskfile.yml`. To do this, you need to:
 1. Install the <a href="https://taskfile.dev/installation/">task util</a>
 2. Read `Taskfile.yml` and run desired tasks
